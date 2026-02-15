@@ -64,3 +64,27 @@ export const getAllEvents = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+export const getShareableLink = async (req: Request, res: Response) => {
+  try {
+    const eventId = req.params.eventId as string;
+
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+    });
+
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    const shareUrl = `https://eventful.com/events/${eventId}`;
+
+    return res.status(200).json({
+      message: "Shareable link generated",
+      shareUrl,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};

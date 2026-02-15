@@ -1,5 +1,10 @@
 
-import { createTicket, scanTicket } from "../controllers/ticket.controller";
+import {
+  createTicket,
+  scanTicket,
+  setReminder,
+} from "../controllers/ticket.controller";
+
 import { Router } from "express";
 import { authenticate } from "../middlewares/auth.middleware";
 
@@ -13,4 +18,10 @@ router.patch(
   "/scan/:ticketId",
   authenticate,
   scanTicket
+);
+
+router.patch(
+  "/reminder/:ticketId",
+  authenticate,
+  setReminder
 );

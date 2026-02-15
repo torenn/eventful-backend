@@ -53,6 +53,7 @@ model Ticket {
   amount        Int?
 paymentRef    String?
 paymentStatus String   @default("PENDING")
+reminderDaysBefore Int?
 
 }
 

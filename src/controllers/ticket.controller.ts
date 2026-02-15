@@ -119,4 +119,41 @@ export const scanTicket = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
+export const setReminder = async (req: AuthRequest, res: Response) => {
+  try {
+    const ticketId = req.params.ticketId as string;
+    const { daysBefore } = req.body;
+
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!daysBefore || daysBefore <= 0) {
+      return res.status(400).json({ message: "Valid daysBefore required" });
+    }
+
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: ticketId },
+    });
+
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    const updatedTicket = await prisma.ticket.update({
+      where: { id: ticketId },
+      data: {
+        reminderDaysBefore: daysBefore,
+      },
+    });
+
+    return res.status(200).json({
+      message: "Reminder set successfully",
+      updatedTicket,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
 
